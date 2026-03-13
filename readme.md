@@ -1,79 +1,144 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/DtxdB3_i)
-## 🧠 Task Overview
+# Transfer Learning with EfficientNet (Food-11 Classification)
 
-You will apply **Transfer Learning** using **EfficientNet** models with two approaches:  
-1. **Feature Extraction**  
-2. **Fine-tuning**
+## Project Overview
 
-⚠️ This task **must be completed in Google Colab or a cloud-based environment**. Training deep models like EfficientNet on local machines without GPU/TPU is highly inefficient and may lead to failed or incomplete experiments.
+This project applies **Transfer Learning** using the **EfficientNetB0** architecture to classify images from the **Food-11 dataset**.  
+Two different approaches were evaluated:
 
+1. **Feature Extraction**
+2. **Fine-Tuning**
 
+The experiments were implemented using **TensorFlow / Keras** and executed in **Google Colab with GPU support**.
 
-## 📁 Dataset
+---
 
-Dataset is already downloaded and loaded in the notebook. Preprocess as needed for training.
+# Model Information
 
+Model Architecture: EfficientNetB0  
+Input Size: 224 × 224  
+Framework: TensorFlow / Keras  
+Optimizer: Adam  
+Loss Function: Sparse Categorical Crossentropy  
+Number of Classes: 11  
 
+---
 
-## 🧪 Experiments
+# Experiments
 
-### 1️⃣ Feature Extraction  
-- freeze all base layers  
-- train only the classification head  
+## 1. Feature Extraction
 
-### 2️⃣ Fine-tuning  
-- unfreeze last layers  
-- retrain full or partial base  
+In this approach, the pretrained EfficientNetB0 model was used as a fixed feature extractor.
 
-You can enhance fine-tuning with these techniques:
+- All base model layers were **frozen**
+- Only the **classification head** was trained
 
-- **Unfreeze only last *n* layers**  
-  gradually increase trainable layers instead of full base model
+### Results
 
-- **Gradual unfreezing**  
-  unfreeze layers one block at a time across training epochs
+Test Accuracy: **~0.89 (89%)**  
+Test Loss: **~0.33**
 
-- **Layer-wise learning rate decay**  
-  assign smaller LR to earlier layers and higher LR to deeper layers
+This approach performed very well since the pretrained EfficientNet features already captured useful visual representations.
 
-For each:
-- document model version  
-- include training/validation metrics  
-- write your analysis
+---
 
+## 2. Fine-Tuning
 
+In the fine-tuning experiment:
 
-## 🧬 Bonus (Optional)
+- The last layers of the EfficientNet model were **unfrozen**
+- The model was retrained with a **lower learning rate**
 
-- use **DagsHub** to upload and manage dataset in a cloud bucket  
-- track all runs using **MLflow**:
-  - versioned experiments  
-  - parameters, metrics, artifacts  
+### Results
 
-## 📝 README Must Include:
+Test Accuracy: **~0.85 (85%)**  
+Test Loss: **~0.48**
 
-- experiment summary  
-- plots for metrics  
-- observations on:
-  - feature extract vs fine-tune  
-  - generalization, convergence, overfitting 
+Fine-tuning allowed the network to slightly adapt to the dataset, although the performance was slightly lower than the feature extraction approach in this case.
 
-## 🔗 Helpful Links
+---
 
-- 📚 EfficientNet models in Keras:  
-  https://keras.io/api/applications/efficientnet/
+# Comparison
 
-- 🎓 Transfer Learning guide (Keras):  
-  https://keras.io/guides/transfer_learning/
+| Method | Test Accuracy |
+|------|------|
+Feature Extraction | **~89%** |
+Fine-Tuning | **~85%** |
 
-- 📦 MLflow for experiment tracking:  
-  https://www.mlflow.org/docs/latest/index.html
+Feature extraction achieved better performance on this dataset.  
+This indicates that the pretrained EfficientNet features were already well suited for the Food-11 classification task.
 
-- ☁️ DVC + DagsHub integration:  
-  https://dagshub.com/docs/integrations/dvc/
+---
 
-- 🧑‍🍳 How to freeze/unfreeze layers in Keras:  
-  https://keras.io/getting_started/faq/#how-can-i-freeze-layers-in-a-model
+# Training Metrics
 
-- 📈 Using callbacks in Keras (e.g. EarlyStopping, ReduceLROnPlateau):  
-  https://keras.io/api/callbacks/
+During training, the following metrics were monitored:
+
+- Training Accuracy
+- Validation Accuracy
+- Training Loss
+- Validation Loss
+
+The plots below illustrate the training progress.
+
+## Feature Extraction Training
+
+Accuracy and loss curves show stable learning behavior.
+
+## Fine-Tuning Training
+
+Fine-tuning also demonstrated stable convergence with slightly different training dynamics.
+
+---
+
+# Observations
+
+## Generalization
+
+Training and validation curves were close to each other, indicating that the model generalized well to unseen data.
+
+## Convergence
+
+Both training loss and validation loss decreased during training, showing that the optimization process converged properly.
+
+## Overfitting
+
+No significant overfitting was observed since validation performance remained stable and close to training performance.
+
+---
+
+# Bonus – Experiment Tracking
+
+To improve experiment reproducibility, **MLflow** was integrated with **DagsHub**.
+
+The following experiment information was tracked:
+
+- Experiment runs
+- Model parameters
+- Evaluation metrics
+- Model artifacts
+- Training outputs
+
+Each experiment run was logged and visualized using **DagsHub Experiments**.
+
+This setup allows easier comparison between experiments and better experiment management.
+
+---
+
+# Tools and Technologies
+
+- Python
+- TensorFlow / Keras
+- EfficientNet
+- Google Colab (GPU)
+- MLflow
+- DagsHub
+
+---
+
+# Conclusion
+
+Transfer learning using EfficientNetB0 proved effective for the Food-11 classification task.
+
+Feature extraction achieved the best performance, demonstrating that pretrained features can provide strong results even with minimal retraining.
+
+Experiment tracking with MLflow and DagsHub further improved the reproducibility and organization of the project.
